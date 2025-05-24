@@ -28,8 +28,8 @@ const Login = () => {
 
     try {
       await login(formData.email, formData.password);
-    } catch (err) {
-      setError('Invalid email or password');
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Invalid email or password');
     } finally {
       setLoading(false);
     }
