@@ -4,26 +4,12 @@ import Link from 'next/link';
 
 const Navbar = () => {
   return (
-    <nav className="bg-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-800">
-              Frontend Assignment
-            </Link>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <Link href="/" className="text-gray-600 hover:text-gray-900">
-              Home
-            </Link>
-            <Link href="/about" className="text-gray-600 hover:text-gray-900">
-              About
-            </Link>
-            <Link href="/contact" className="text-gray-600 hover:text-gray-900">
-              Contact
-            </Link>
-          </div>
+    <nav className="bg-gray-800 text-white p-4">
+      <div className="flex justify-between items-center">
+        <Link href="/" className="text-xl font-bold">Pizza Order System</Link>
+        <div className="space-x-4">
+          <Link href="/" className="hover:text-gray-300">Home</Link>
+          <Link href="/dashboard" className="hover:text-gray-300">Dashboard</Link>
         </div>
       </div>
     </nav>
