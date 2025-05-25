@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 const mockOrders = [
@@ -8,32 +10,47 @@ const mockOrders = [
   { id: 'PZA005', customerName: 'Charlie Davis', pizzaType: 'Pepperoni', quantity: 1, orderDate: '2023-10-05 16:10', status: 'Cancelled' },
 ];
 
+const statusStyles: Record<string, string> = {
+  Pending: 'bg-yellow-100 text-yellow-700',
+  Preparing: 'bg-blue-100 text-blue-700',
+  'Out for Delivery': 'bg-purple-100 text-purple-700',
+  Delivered: 'bg-green-100 text-green-700',
+  Cancelled: 'bg-red-100 text-red-700',
+};
+
 const PizzaOrders = () => {
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-extrabold text-gray-900 mb-6">Pizza Orders</h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white shadow-md rounded-lg">
-          <thead>
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto bg-white">
+      <h1 className="text-3xl font-bold text-indigo-600 mb-8 text-center">Pizza Orders</h1>
+
+      <div className="overflow-x-auto rounded-lg shadow border border-gray-200">
+        <table className="min-w-full text-sm text-gray-700">
+          <thead className="bg-indigo-50 text-indigo-700 uppercase text-xs font-medium">
             <tr>
-              <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-              <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Customer Name</th>
-              <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Pizza Type</th>
-              <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-              <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Order Date</th>
-              <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              {['Order ID', 'Customer Name', 'Pizza Type', 'Quantity', 'Order Date', 'Status'].map((header) => (
+                <th key={header} className="px-6 py-4 text-left">
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {mockOrders.map((order) => (
-              <tr key={order.id}>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{order.id}</td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{order.customerName}</td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{order.pizzaType}</td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{order.quantity}</td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{order.orderDate}</td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${order.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : order.status === 'Preparing' ? 'bg-blue-100 text-blue-800' : order.status === 'Out for Delivery' ? 'bg-purple-100 text-purple-800' : order.status === 'Delivered' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+            {mockOrders.map((order, idx) => (
+              <tr
+                key={order.id}
+                className={`transition duration-150 hover:bg-gray-100 ${
+                  idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                }`}
+              >
+                <td className="px-6 py-4 font-medium text-gray-900">{order.id}</td>
+                <td className="px-6 py-4">{order.customerName}</td>
+                <td className="px-6 py-4">{order.pizzaType}</td>
+                <td className="px-6 py-4 text-center">{order.quantity}</td>
+                <td className="px-6 py-4 text-gray-500">{order.orderDate}</td>
+                <td className="px-6 py-4">
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-semibold ${statusStyles[order.status]}`}
+                  >
                     {order.status}
                   </span>
                 </td>
@@ -46,4 +63,4 @@ const PizzaOrders = () => {
   );
 };
 
-export default PizzaOrders; 
+export default PizzaOrders;

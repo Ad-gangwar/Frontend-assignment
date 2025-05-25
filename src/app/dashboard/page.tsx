@@ -1,22 +1,53 @@
 'use client';
 
+import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 
-const Dashboard = () => {
+export default function Dashboard() {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-extrabold text-gray-900">Hello, {user?.displayName || 'User'}!</h1>
-      <p className="mt-2 text-center text-sm text-gray-600">
-        Welcome to your dashboard.
-      </p>
-      <Link href="/pizza-orders" className="mt-4 text-indigo-600 hover:text-indigo-500">
-        View Pizza Orders
-      </Link>
-    </div>
-  );
-};
+    <ProtectedRoute>
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Welcome back, {user?.name}! 👋
+            </h1>
+            <p className="text-gray-600">
+              Manage your pizza orders and track deliveries from your dashboard.
+            </p>
+          </div>
 
-export default Dashboard; 
+          <div className="mt-8">
+            <Link
+              href="/pizza-orders"
+              className="block w-full bg-white p-6 border border-gray-200 rounded-lg hover:border-indigo-500 transition-colors duration-200"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">View Orders</h2>
+                  <p className="text-gray-600 mt-1">Check and manage your pizza orders</p>
+                </div>
+                <svg
+                  className="h-6 w-6 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </ProtectedRoute>
+  );
+} 

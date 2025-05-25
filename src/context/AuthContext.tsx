@@ -2,65 +2,60 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 
 interface User {
-  email: string;
   name: string;
+  email: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string) => Promise<void>;
   logout: () => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
+  // Check localStorage on initial load
   useEffect(() => {
-    // Check if user is logged in by checking cookies
-    const checkAuth = () => {
-      const userCookie = Cookies.get('user');
-      if (userCookie) {
-        setUser(JSON.parse(userCookie));
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
       }
-      setLoading(false);
-    };
-
-    checkAuth();
+    } catch (error) {
+      console.error('Error reading from localStorage:', error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  const login = async (email: string, password: string) => {
-    try {
-      // TODO: Implement actual login logic here
-      // For now, just simulate a successful login
-      const userData = {
-        email,
-        name: 'Test User', // This would come from your backend
-      };
-      setUser(userData);
-      // Set cookie with 7 days expiry
-      Cookies.set('user', JSON.stringify(userData), { expires: 7 });
-      router.push('/dashboard');
-    } catch (error) {
-      throw new Error('Login failed');
-    }
+  const login = async (email: string) => {
+    const userName = email.split('@')[0];
+    const userData = {
+      name: userName.charAt(0).toUpperCase() + userName.slice(1),
+      email: email
+    };
+    
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+    router.push('/dashboard');
   };
 
   const logout = () => {
+    localStorage.removeItem('user');
     setUser(null);
-    Cookies.remove('user');
     router.push('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

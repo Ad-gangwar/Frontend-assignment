@@ -3,25 +3,11 @@ import type { NextRequest } from 'next/server';
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
-  // Get the pathname of the request (e.g. /, /dashboard, /login)
   const path = request.nextUrl.pathname;
+  const isRootPath = path === '/';
 
-  // Define public paths that don't require authentication
-  const isPublicPath = path === '/login' || path === '/signup';
-
-  // Get the token from the cookies
-  const token = request.cookies.get('user')?.value || '';
-
-  // Redirect logic
-  if (isPublicPath && token) {
-    // If the user is logged in and tries to access login/signup pages,
-    // redirect them to the dashboard
-    return NextResponse.redirect(new URL('/dashboard', request.url));
-  }
-
-  if (!isPublicPath && !token) {
-    // If the user is not logged in and tries to access protected pages,
-    // redirect them to the login page
+  // For client-side auth, we only need to handle the root path redirect
+  if (isRootPath) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 }
@@ -30,7 +16,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/',
-    '/dashboard/:path*',
     '/login',
     '/signup',
   ],
